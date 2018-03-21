@@ -1,0 +1,29 @@
+version: '3'
+services:
+  rails:
+    build: .
+    command: /bin/sh -c "rm -f /rails/tmp/pids/server.pid && bin/rails s -b '0.0.0.0' -e development"
+    volumes:
+      - .:/rails
+    ports:
+      - '3000:3000'
+      - '1234:1234'
+    environment:
+      POSTGRES_PASSWORD: example
+    env_file: .env
+    links:
+      - db
+      - redis
+    stdin_open: true
+    tty: true
+  db:
+    image: postgres:10
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: "freight_train_development"
+    stdin_open: true
+    tty: true
+  redis:
+    image: redis:4
+    stdin_open: true
+    tty: true
